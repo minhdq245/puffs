@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web khảo sát</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffe4e1;
+    }
+    h1 {
+      color: #ff69b4;
+      margin-top: 50px;
+    }
+    #welcomeScreen h1 {
+      color: black;
+    }
+    p {
+      font-size: 20px;
+      color: #555;
+    }
+    .button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 18px;
+      color: white;
+      background-color: #ff69b4;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #welcomeScreen .button, #q0 .button {
+      background-color: black;
+    }
+    .button:hover {
+      transform: scale(1.1);
+    }
+    #nameInput {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid black;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .hidden {
+      display: none !important;
+    }
+    #welcomeScreen, #q0, #q1, #q2, #q3 {
+      background-color: white;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .welcome-container {
+    position: relative;
+    width: 100vw; /* Full viewport width */
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    }
+    .welcome-gif {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+    }
+    .welcome-content {
+      flex: 1;
+      text-align: center;
+    }
+    /* Add to your style section */
+    #welcomeScreen, #q0, #q1, #q2, #q3, #q4, #q5, #q6, #q9, #q11, #q12, #q13 {
+      background-color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .welcome-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    #q7 .welcome-container,
+    #q8 .welcome-container,
+    #q10 .welcome-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #q7 .welcome-content,
+    #q8 .welcome-content,
+    #q10 .welcome-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      z-index: 2;
+      background-color: rgba(255,255,255,0.9);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    /* Side images positioning */
+    #q7 .side-left,
+    #q8 .side-left,
+    #q10 .side-left {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #q7 .side-right,
+    #q8 .side-right,
+    #q10 .side-right {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Text color for all questions */
+    h1, h2, p {
+      color: black;
+    }
+
+    /* Button styling consistent with welcomeScreen */
+    .button {
+      background-color: black;
+      color: white;
+    }
+
+    /* Fix the pink line issue */
+    body {
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Fix layout for single image screens */
+    .single-image-layout {
+      flex-direction: column;
+    }
+
+    .single-image-layout img {
+      margin-bottom: 30px;
+    }
+
+    #q14, #q16, #q17 {
+        background-color: #ffe4e1;
+   }
+
+   .q15-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #ffe4e1;
+  overflow: hidden;
+}
+
+.q15-content {
+  position: relative;
+  width: 400px;
+  padding: 20px;  
+  z-index: 100;
+}
+
+.q15-gif {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  position: absolute;
+  z-index: 1;
+}
+
+#noButton {
+  position: absolute;
+  background-color: #ff69b4;
+  margin: 10px;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+  </style>
+</head>
+<body>
+
+  <audio id="bgMusic" loop>
+    <source src="./Persona 5 OST- Beneath the Mask - jstark54323.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const bgMusic = document.getElementById('bgMusic');
+        
+        // Start music on first user interaction
+        document.addEventListener('click', function startMusic() {
+            bgMusic.play()
+                .then(() => {
+                    console.log("Music started");
+                    document.removeEventListener('click', startMusic);
+                })
+                .catch(err => console.log("Error playing music:", err));
+        }, { once: true });
+
+        // Set volume
+        bgMusic.volume = 0.5;
+    });
+  </script>
+
+  <div id="welcomeScreen">
+    <div class="welcome-container">
+      <img class="welcome-gif" src="https://media.giphy.com/media/3ov9jZ0V6gOO0oa98Y/giphy.gif" alt="Left GIF">
+      <div class="welcome-content">
+        <h1>Xin chào! Tên của bạn là gì nhỉ :3?</h1>
+        <input type="text" id="nameInput" placeholder="Nhập tên của bạn...">
+        <button class="button" onclick="continue_()">Tiếp tục</button>
+      </div>
+      <img class="welcome-gif" src="https://media.giphy.com/media/l0IyiygAO1k6RBTtS/giphy.gif" alt="Right GIF">
+    </div>
+  </div>
+
+  <div id="q0" class="hidden">
+    <div class="welcome-container">
+      <img class="welcome-gif" src="https://media.giphy.com/media/D6InoH7TLxMsM/giphy.gif" alt="Left GIF">
+      <div class="welcome-content">
+        <span id="greeting" style="font-size: 24px; display: block; margin-bottom: 20px;"></span>
+        <p style="margin-bottom: 20px;">Để AI dự đoán được bạn là người thiên về phía bán cầu não bên nào, mình xin phép được khảo sát bạn một số câu hỏi nhé :D!</p>
+        <button class="button" onclick="startSurvey()">OK!</button>
+      </div>
+      <img class="welcome-gif" src="https://media.giphy.com/media/hV0D15h8onMn9Pn6e7/giphy.gif" alt="Right GIF">
+    </div>
+  </div>
+
+  <div id="q1" class="hidden">
+    <div class="welcome-container">
+      <div class="welcome-content">
+        <img class="welcome-gif" src="https://media.giphy.com/media/ny7UCd6JETnmE/giphy.gif" alt="Question 1 GIF">
+        <h1>Câu 1: Bạn có tự nhận thấy mình là 1 người ham học hỏi?</h1>
+        <button class="button" onclick="showQ2()">Có</button>
+        <button class="button" onclick="showQ2()">Không</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="q2" class="hidden">
+    <div class="welcome-container">
+      <div class="welcome-content">
+        <img class="welcome-gif" src="https://media.giphy.com/media/fhAwk4DnqNgw8/giphy.gif" alt="Question 2 GIF">
+        <h1>Câu 2: Bạn thích môn học nào nhất?</h1>
+        <button class="button" onclick="showQ3()">Toán và các môn tương tự thiên về suy nghĩ</button>
+        <button class="button" onclick="showQ3()">Âm nhạc và các môn tương tự thiên về nghệ thuật</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="q3" class="hidden">
+    <div class="welcome-container">
+      <div class="welcome-content"></div>
+        <img class="welcome-gif" src="https://media.giphy.com/media/aQwvKKi4Lv3t63nZl9/giphy.gif" alt="Question 3 GIF">
+        <h1>Câu 3: Khi nghe bài hát mới, bạn thường:</h1>
+        <button class="button" onclick="showQ4()">Tìm ngay lời bài hát</button>
+        <button class="button" onclick="showQ4()">Lắng nghe nhịp và giai điệu trước</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="q4" class="hidden">
+    <div class="welcome-container">
+      <div class="welcome-content">
+        <img class="welcome-gif" src="https://media.giphy.com/media/m6exQkMQ2h6lahpPiY/giphy.gif?cid=790b7611waymgjyinhwongqmdoirokzl0pbee9v79ic6t6yp&ep=v1_stickers_search&rid=giphy.gif&ct=s" alt="Question 4 GIF">
+        <h1>Câu 4: Khi gặp gỡ một ai đó, bạn thường :</h1>
+        <button class="button" onclick="showQ5()">Tới sớm hơn hoặc đúng giờ</button>
+        <button class="button" onclick="showQ5()">Tới đúng giờ hoặc hơi trễ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="q5" class="hidden">
+    <div class="welcome-container">
+      <div class="welcome-content">
+        <img class="welcome-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmk0enl4cmh6M3ZhYnk2eG11aHg0M3pwem5vaXE2ZzhjOXY0ZGZlaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/NFA61GS9qKZ68/giphy.gif" alt="Question 5 GIF">
+        <h1>Câu 5: Khi đang đọc một quyển sách hoặc một bài báo:</h1>
+        <button class="button" onclick="showQ6()">Thường tập trung vào từng chữ và từng chi tiết</button>
+        <button class="button" onclick="showQ6()">Thường lướt qua và chỉ tập trung vào những chi tiết thú vị</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="q6" class="hidden">
+    <div class="welcome-container" style="justify-content: center; align-items: center;">
+      <img class="welcome-gif" src="https://media.giphy.com/media/GVzvPuE2Xwcf1s4BGq/giphy.gif?cid=790b7611g97i63aupfxu98s9dxdhoqknc54hgq3mz7dvalz5&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Left GIF" style="object-fit: contain;">
+      <div class="welcome-content" style="text-align: center; margin: 0 20px;">
+        <h1 style="margin-bottom: 20px;">Câu 6: Bạn yêu thích nhóm nhạc nào nhất?</h1>
+        <input type="text" id="groupInput" placeholder="Tên nhóm nhạc..." 
+          style="padding: 15px 30px; font-size: 18px; width: 300px; margin: 20px auto; display: block; border: 3px solid #000;">
+        <button class="button" style="display: block; margin: 20px auto;" onclick="showQ7()">Gửi câu trả lời</button>
+      </div>
+      <img class="welcome-gif" src="https://media.giphy.com/media/Jy10vldGH9OSY/giphy.gif?cid=790b7611jslophdenitqhykh9appx9ohsr4ohednehi75m8j&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Right GIF" style="object-fit: contain;">
+    </div>
+  </div>
+
+  <!-- Sửa phần q7 -->
+  <div id="q7" class="hidden">
+    <div class="welcome-container" style="position: relative; height: 100vh;">
+    <!-- Top image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/8BFUiGwWkpJcIR9Xlz/giphy.gif?cid=790b7611fdl0kcp1b3wdrjw5dr9x91g2c1h6owa8r90eqdew&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+          style="position: absolute; top: 5%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; object-fit: cover;">
+    
+    <!-- Left image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2xtdmtvd2lydjJ6cXlhcXRod2V2OG9oNzZ6ZXA0Z3IyYXJqcjVpcSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/mXxndrbayRhKUhBwOf/giphy.gif"
+          style="position: absolute; left: 5%; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; object-fit: cover;">
+
+    <!-- Center content -->
+      <div class="welcome-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 400px;">
+        <h1 style="margin-bottom: 20px; font-size: 28px;">Biết mò!! Thía ca sĩ bạn yêu thích nhất trong nhóm là ai thía :P?</h1>
+        <input type="text" id="singerInput" placeholder="Tên ca sĩ..." 
+          style="padding: 15px 30px; font-size: 18px; width: 300px; margin: 20px auto; display: block; border: 3px solid #000;">
+        <button class="button" style="display: block; margin: 20px auto;" onclick="showQ8()">Gửi câu trả lời</button>
+      </div>
+
+    <!-- Right image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWZ4c3pxZTllbzBubGN2a25vbm9kZTJqcmY2azUwbjU1enlmd2NuNiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/2ysavcuhmRl0FTS30b/giphy.gif"
+          style="position: absolute; right: 5%; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; object-fit: cover;">
+
+    <!-- Bottom image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/ryJdBsIkG0a8OgRriv/giphy.gif?cid=790b7611cpxrutwwrbnywezpwu076jb5rmwigxun3ho9heri&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+          style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; object-fit: cover;">
+    </div>
+  </div>
+
+  <div id="q8" class="hidden">
+    <div class="welcome-container" style="position: relative; height: 100vh;">
+      <!-- Top image -->
+      <img class="welcome-gif" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3BpY2NoeGp2dXZtczVxZTd4Yzdpa2xyOWQ4bmg3dzFhbzJ2ZW0xNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iVbgypv2I8BRxBQDBQ/giphy.gif"
+           style="position: absolute; top: 5%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; object-fit: cover;">
+      
+      <!-- Left image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/q6RV7Yk4l6kX7s1avt/giphy.gif?cid=790b7611mqvm1l0v7f38mq5bfvea8510c78oct8wjkj6zuz6&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+           style="position: absolute; left: 5%; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; object-fit: cover;">
+
+      <!-- Center content -->
+      <div class="welcome-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 400px;">
+        <h1 style="margin-bottom: 20px; font-size: 28px;">Ningning phải khum?? Bạn quá là dễ đoán :3</h1>
+        <h2 style="margin-bottom: 30px;">(chị này người Trung Quốc nhỉ?)</h2>
+        <button class="button" style="margin: 0 auto; width: 200px; padding: 20px 40px;" onclick="showQ9()">Đúng!!</button>
+      </div>
+
+      <!-- Right image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/0b2w4Viyg9q5tJjQrD/giphy.gif?cid=790b7611fdl0kcp1b3wdrjw5dr9x91g2c1h6owa8r90eqdew&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+           style="position: absolute; right: 5%; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; object-fit: cover;">
+
+      <!-- Bottom image -->
+      <img class="welcome-gif" src="https://media.giphy.com/media/2iemOhsbLZmAvmuZHN/giphy.gif?cid=ecf05e473cc17xwhqmmj2n7iizm42kzebhylpfdkxuwtmxyk&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+           style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; object-fit: cover;">
+    </div>
+  </div>
+
+  <div id="q9" class="hidden">
+    <div class="welcome-container" style="justify-content: center; align-items: center;">
+      <img class="welcome-gif" src="https://residence.yamazaki.vn/wp-content/uploads/2020/04/MG_8897.jpg1_-scaled.jpg" alt="Left GIF" style="object-fit: contain;">
+      <div class="welcome-content" style="text-align: center; margin: 0 20px;">
+        <h1 style="margin-bottom: 20px;">Nhắc đến Tung Của, bạn có thích cặp đôi nào người Trung nữa không??</h1>
+        <input type="text" id="coupleInput" placeholder="Đôi nào mà cả 2 đều là vận động viên..." 
+          style="padding: 15px 30px; font-size: 18px; width: 500px; margin: 20px auto; display: block;">
+        <button class="button" style="display: block; margin: 20px auto;" onclick="showQ10()">Gửi câu trả lời</button>
+      </div>
+      <img class="welcome-gif" src="https://cdn.anisearch.com/images/anime/cover/17/17971_600.webp" alt="Right GIF" style="object-fit: contain;">
+    </div>
+  </div>
+
+  
+  <div id="q10" class="hidden">
+    <div class="welcome-container" style="position: relative; height: 100vh;">
+      <!-- Top image -->
+      <img class="welcome-gif" src="https://scontent.fhan19-1.fna.fbcdn.net/v/t1.6435-9/44262529_2440666969296625_6226303317509668864_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=0b6b33&_nc_eui2=AeGJ1wSZYMpOuwq_yFWPy9jdhGPQANuYD1yEY9AA25gPXNefpqaRRvTaL1OBdiSBVQo3yUAnla_atKVEUDlpk5Lo&_nc_ohc=bVfeWcVq9tMQ7kNvgFFrb8g&_nc_oc=Adh7hJxbY1N6onUTvb6k1sNEYcXN_9KyB3z4SG5N4VpjXpdak19EoTtZ3gmDoap2tn4&_nc_zt=23&_nc_ht=scontent.fhan19-1.fna&_nc_gid=A2bHKDd2TnIaopoeTK9LkUh&oh=00_AYDZdbV-gOq4sf3pMiTdqWKopTrANur2QxMO_0gDMZ4r7A&oe=67B9DB8E"
+           style="position: absolute; top: 5%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; object-fit: cover;">
+      
+      <!-- Left image -->
+      <img class="welcome-gif" src="https://i.pinimg.com/originals/69/d8/b1/69d8b1a20e533e9aba0585087fe838b9.jpg"
+           style="position: absolute; left: 5%; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; object-fit: cover;">
+
+      <!-- Center content -->
+      <div class="welcome-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 400px; background-color: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; z-index: 2;">
+        <h1 style="margin-bottom: 20px; font-size: 28px;">Là cặp này hả :D?</h1>
+        <button class="button" style="display: block; margin: 20px auto;" onclick="showQ11()">Đúng rồi là ShaTou</button>
+      </div>
+
+      <!-- Right image -->
+      <img class="welcome-gif" src="https://down-vn.img.susercontent.com/file/sg-11134201-7rdvs-m05yugdx7m5jf1"
+           style="position: absolute; right: 5%; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; object-fit: cover;">
+
+      <!-- Bottom image -->
+      <img class="welcome-gif" src="https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2024/08/08/40fa6aff-ff44-4c73-9768-8af0f8d81b50_336a5fb7.jpg"
+           style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; object-fit: cover;">
+    </div>
+  </div>
+
+  <div id="q11" class="hidden">
+    <div class="welcome-container" style="flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+      <div style="display: flex; gap: 30px; margin-bottom: 40px;">
+        <img src="https://trasuadodo.vn/wp-content/uploads/2022/12/Socala-Tiramisu-Ovaltine-25k-1536x1536.jpg" 
+             style="width: 300px; height: 300px; object-fit: cover;">
+        <img src="https://trasuadodo.vn/wp-content/uploads/2023/05/O-LONG-NHAI-SUA.jpg"
+             style="width: 300px; height: 300px; object-fit: cover;">
+        <img src="https://trasuadodo.vn/wp-content/uploads/2021/04/Do-Do_Tra-Sua-Socola-Cookies-web_2023.jpg"
+             style="width: 300px; height: 300px; object-fit: cover;">
+      </div>
+      <h1 style="margin-bottom: 40px; text-align: center;">Khoan tutu đã, bạn có thích uống những đồ này không ??</h1>
+      <div style="display: flex; gap: 20px;">
+        <button class="button" onclick="showQ12('yes')">Có</button>
+        <button class="button" onclick="showQ12('no')">Không</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="q12" class="hidden">
+    <div class="welcome-container">
+      <img class="welcome-gif" src="https://media.giphy.com/media/ZFuKkiDwHsl8I/giphy.gif" alt="Left GIF">
+      <div class="welcome-content">
+        <h1>Ơ sao những gì bạn trả lời làm mình nghĩ tới 1 người..</h1>
+        <h1>Hình như bạn có 1 biện danh là "Mít" không???</h1>
+        <button class="button" onclick="showQ13('yes')">Phải</button>
+        <button class="button" onclick="showQ13('no')">Không Phải</button>
+      </div>
+      <img class="welcome-gif" src="https://media.giphy.com/media/BBNYBoYa5VwtO/giphy.gif" alt="Right GIF">
+    </div>
+  </div>
+
+  <div id="q13" class="hidden">
+    <div class="welcome-container">
+      <img class="welcome-gif" src="https://media.giphy.com/media/3MwLGbvFjwhHvXJNVM/giphy.gif?cid=790b7611ubfmeqri7zi95gs8m464tv60lbsc18b7cpzkllu9&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Left GIF">
+      <div class="welcome-content">
+        <h1>Có phải Châu Anh đang trả lời không vậy????</h1>
+        <button class="button" onclick="showQ14()">Phải</button>
+        <button class="button" onclick="showQ14()">Đúng</button>
+      </div>
+      <img class="welcome-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzN6M2R0dzllNXY5NnhrZmV3NXkweDRjZ3EwdzY5ZGN2NGp3Y2V2YyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TmyW3zuFXfd5UkXlkd/giphy.gif" alt="Right GIF">
+    </div>
+  </div>
+
+  <div id="q14" class="hidden" style="background-color: #ffe4e1;">
+    <div class="welcome-container">
+      <img class="welcome-gif" src="https://media.giphy.com/media/SvK7Gxcq4QS4fNNjYH/giphy.gif" alt="Left GIF">
+      <div class="welcome-content">
+        <h3 style="color: #ff69b4;">Ừ, thực ra chả có dự án hay AI gì ở đấy hết đâu, cũng chả có ai xem cái này cả. Người duy nhất tao gửi cái link này chỉ có Châu Anh thôi. Trong mắt mình, tao thấy mày là một người rất đặc biệt. Tao thích Châu Anh nhiều lắm, và càng nghe mày kể về những sở thích, về những điều xung quanh cuộc sống của mày làm tao càng cảm thấy ấn tượng và thêm trân trọng mày hơn. Tao thật sự mong mối quan hệ của bọn mình tiến xa hơn cũng như là có thể hiểu rõ Châu Anh hơn nữa. Nên tao muốn hỏi là</h3> 
+        <button class="button" style="background-color: #ff69b4;" onclick="showQ15()">Tiếp theo</button>
+      </div>
+      <img class="welcome-gif" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDFyMDdpOWN0MHk1YWFpeGhkejV6cXE4NXdjdXlsZ3R1cjJzdm5vNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/LOXAmVhFOdo0BmP9n6/giphy.gif" alt="Right GIF">
+    </div>
+  </div>
+
+  <div id="q15" class="hidden" style="background-color: #ffe4e1;">
+    <div class="q15-container" style="position: relative; min-height: 100vh;">
+      <!-- Left image với z-index thấp hơn -->
+      <img class="q15-gif" src="https://media.giphy.com/media/wNk71OcVtOPncxNHVT/giphy.gif" alt="Left GIF" 
+           style="width: 300px; height: 300px; object-fit: cover; position: absolute; left: 5%; top: 50%; transform: translateY(-50%); z-index: 1;">
+  
+      <!-- Center content với z-index cao nhất -->
+      <div class="q15-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 100;">
+        <h2 style="color: #ff69b4; margin-bottom: 30px;">Tết này Châu Anh đi chơi cùng tao nhé ❤️?</h2>
+        <div style="position: relative;">
+          <button class="button" style="background-color: #ff69b4; margin: 10px;" onclick="showQ16('yes')">Ok</button>
+          <button id="noButton" class="button" style="background-color: #ff69b4; margin: 10px; position: absolute;" 
+                  onmouseover="moveButton()" onclick="showQ17('no')">Không</button>
+        </div>
+      </div>
+  
+      <!-- Right image với z-index thấp hơn -->
+      <img class="q15-gif" src="https://media.giphy.com/media/a21hLOoPdGr60/giphy.gif" alt="Right GIF" 
+           style="width: 300px; height: 300px; object-fit: cover; position: absolute; right: 5%; top: 50%; transform: translateY(-50%); z-index: 1;">
+    </div>
+  </div>
+  
+  <div id="q16" class="hidden" style="background-color: #ffe4e1;">
+      <div class="welcome-container">
+        <img class="welcome-gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif?cid=790b7611k9dw75bix1i3lx4z39a7mux08p4m5tjfgq3uv9g8&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Left GIF">
+        <div class="welcome-content">
+          <h2 style="color: #ff69b4;">Okayy, cảm ơn Châu Anh đã dành thời gian để làm cái này nha. Xong rùi thì nhắn Minh kết quả nhé vì tao code ngu lắm không biết làm thế nào để nó báo kết quả về máy =))). Với cả tao cũng chưa biết đi chơi ở đâu cả, ngồi bàn với tao nhá ❤️</h2>
+        </div>
+        <img class="welcome-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGJqMDNxM3B2cndzeTF1a3NuamN5dnBnOW9lbmg5NmZ2bzA2ZDEwbSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/P2hdI6VaKlFhxncQG9/giphy.gif" alt="Right GIF">
+      </div>
+  </div>
+
+  <div id="q17" class="hidden" style="background-color: #ffe4e1;">
+      <div class="welcome-container">
+        <img class="welcome-gif" src="https://media.giphy.com/media/QlQdLBS70XJcZY1fLF/giphy.gif" alt="Left GIF">
+       <div class="welcome-content">
+          <h2 style="color: #ff69b4;">Okay ☹️, cảm ơn Châu Anh đã dành thời gian để làm cái này nha. Xong rùi thì nhắn Minh kết quả nhé vì tao code ngu lắm không biết làm thế nào để nó báo kết quả về máy</h2>
+       </div>
+       <img class="welcome-gif" src="https://media.giphy.com/media/27rspbAAESlzzFtN2e/giphy.gif" alt="Right GIF">
+     </div>
+  </div>
+
+  <script>
+    function continue_() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        alert('Vui lòng nhập tên của bạn!');
+        return;
+      }
+      document.getElementById('welcomeScreen').classList.add('hidden');
+      document.getElementById('q0').classList.remove('hidden');
+      document.getElementById('greeting').textContent = `${name} thân mến,`;
+    }
+
+    function startSurvey() {
+      document.getElementById('q0').classList.add('hidden');
+      document.getElementById('q1').classList.remove('hidden');
+    }
+
+    function showQ2() {
+      document.getElementById('q1').classList.add('hidden');
+      document.getElementById('q2').classList.remove('hidden');
+    }
+
+    function showQ3() {
+      document.getElementById('q2').classList.add('hidden');
+      document.getElementById('q3').classList.remove('hidden');
+    }
+
+    function showQ4() {
+      document.getElementById('q3').classList.add('hidden');
+      document.getElementById('q4').classList.remove('hidden');
+    }
+
+    function showQ5() {
+      document.getElementById('q4').classList.add('hidden');
+      document.getElementById('q5').classList.remove('hidden');
+    }
+
+    function showQ6() {
+      document.getElementById('q5').classList.add('hidden');
+      document.getElementById('q6').classList.remove('hidden');
+    }
+
+    function showQ7() {
+      const groupName = document.getElementById('groupInput').value.trim();
+      if (groupName === "Aespa" || groupName === "aespa" || groupName === "æspa" || groupName === "A.E.S.P.A" || groupName === "에스파" || groupName === "ÆSPA" || groupName === "AESPA") {
+        document.getElementById('q6').classList.add('hidden');
+        document.getElementById('q7').classList.remove('hidden');
+      } else {
+        alert("Ơ không phải tên nhóm đó là sự kết hợp giữa æ lấy từ 'Avatar X Experience' & 'Aspect' hở ? Bạn nhập lại ik :>");
+        document.getElementById('groupInput').value = '';
+      }
+    }
+
+    function showQ8() {
+      const singerName = document.getElementById('singerInput').value.trim();
+      if (singerName === "Ningning" || singerName === "ningning" || singerName === "NingNing" || singerName === "Ning Yizhuo" || singerName === "닝이줘" || singerName === "닝닝" || singerName === "NINGNING" || singerName === "NING NING" || singerName === "NING YIZHUO" || singerName === "닝이줘" || singerName === "닝닝" || singerName === "닝" || singerName === "Ning" || singerName === "NING") {
+        document.getElementById('q7').classList.add('hidden');
+        document.getElementById('q8').classList.remove('hidden');
+      } else {
+        alert("Tưởng là chị nào người Trung Quốc cơ mà nhỉ..");
+        document.getElementById('singerInput').value = '';
+      }
+    }
+
+    function showQ9() {
+      document.getElementById('q8').classList.add('hidden');
+      document.getElementById('q9').classList.remove('hidden');
+    }
+
+    function showQ10() {
+      const coupleName = document.getElementById('coupleInput').value.trim();
+      if (coupleName === "sun yingsha và wang chuqin" || coupleName === "Sun Yingsha và Wang Chuqin" || coupleName === "wang chuqin và sun yingsha" || coupleName === "Wang Chuqin và Sun Yingsha" || coupleName === "Shasha và Datou" || coupleName === "Datou và Shasha" || coupleName === "shasha và datou" || coupleName === "datou và shasha" || coupleName === "Bánh đậu nhỏ và Đầu to" || coupleName === "Đầu to và Bánh đậu nhỏ" || coupleName === "bánh đậu nhỏ và đầu to" || coupleName === "đầu to và bánh đậu nhỏ" || coupleName === "Shasha và TouTou" || coupleName === "TouTou và Shasha" || coupleName === "shasha và toutou" || coupleName === "toutou và shasha" || coupleName === "Toutou và Shasha" || coupleName === "Shasha và Toutou" || coupleName === "Tôn Dĩnh Sa và Vương Sở Khâm" || coupleName === "Vương Sở Khâm và Tôn Dĩnh Sa" || coupleName === "tôn dĩnh sa và vương sở khâm" || coupleName === "vương sở khâm và tôn dĩnh sa" || coupleName === "Tôn Anh Sa và Vương Sở Khâm" || coupleName === "Vương Sở Khâm và Tôn Anh Sa" || coupleName === "Tôn Anh Sa và Vương Sở Khâm" || coupleName === "Vương Sở Khâm và Tôn Anh Sa" || coupleName === "ShaTou" || coupleName === "TouSha" || coupleName === "shatou" || coupleName === "tousha" || coupleName === "Shatou" || coupleName === "Tousha") {
+        document.getElementById('q9').classList.add('hidden');
+        document.getElementById('q10').classList.remove('hidden');
+      } else {
+        alert("Cặp vận động viên bóng bàn nổi tiếng Trung Quốc đó bạn, ai và ai?");
+        document.getElementById('coupleInput').value = '';
+      }
+    }
+
+    function showQ11() {
+      document.getElementById('q10').classList.add('hidden');
+      document.getElementById('q11').classList.remove('hidden');
+    }
+
+    function showQ12(answer) {
+      if (answer === 'no') {
+        alert('Bạn đừng có lừa mình :P Dựa trên những gì bạn trả lời trước đó thì AI đoán được là có cơ');
+      } else {
+        document.getElementById('q11').classList.add('hidden'); 
+        document.getElementById('q12').classList.remove('hidden');
+      }
+    }
+
+    function showQ13(answer) {
+      if (answer === 'no') {
+        alert('Lại bảo không phải đi =)))))');
+      } else {
+        document.getElementById('q12').classList.add('hidden'); 
+        document.getElementById('q13').classList.remove('hidden');
+      }
+    }
+    
+    function showQ14() {
+      document.getElementById('q13').classList.add('hidden');
+      document.getElementById('q14').classList.remove('hidden');
+    }
+
+    function showQ15() {
+      document.getElementById('q14').classList.add('hidden');
+      document.getElementById('q15').classList.remove('hidden');
+    }
+
+    function showQ16(answer) {
+    document.getElementById('q15').classList.add('hidden');
+    document.getElementById('q16').classList.remove('hidden');
+    }
+
+    function showQ17(answer) {
+    document.getElementById('q15').classList.add('hidden');
+    document.getElementById('q17').classList.remove('hidden');
+    }
+
+    function moveButton() {
+  const noButton = document.getElementById('noButton');
+  const content = document.querySelector('.q15-content');
+  const contentRect = content.getBoundingClientRect();
+  
+  // Define movement area
+  const areaWidth = contentRect.width - noButton.offsetWidth;
+  const areaHeight = contentRect.height - noButton.offsetHeight;
+  
+  // Generate random position
+  const x = Math.random() * areaWidth;
+  const y = Math.random() * areaHeight;
+  
+  // Add some bounce effect
+  const bounceX = Math.sin(Date.now() / 200) * 10;
+  const bounceY = Math.cos(Date.now() / 200) * 10;
+  
+  // Apply transform with bounce
+  noButton.style.transform = `translate(${x + bounceX}px, ${y + bounceY}px) rotate(${Math.random() * 20 - 10}deg)`;
+  
+  // Add scale effect on hover
+  noButton.style.transform += ' scale(1.1)';
+  
+  // Make sure button stays visible
+  noButton.style.opacity = '1';
+  noButton.style.visibility = 'visible';
+}
+</script>
+</body>
+</html>
